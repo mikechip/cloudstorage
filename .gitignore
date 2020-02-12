@@ -2,3 +2,4 @@
 composer.phar
 test.php
 phinx.yml
+.env

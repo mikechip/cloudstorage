@@ -9,17 +9,29 @@
     mb_internal_encoding("UTF-8");
     date_default_timezone_set('Etc/GMT+3');
 
-    $request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
-        $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
-    );
+    try {
+        $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+        $dotenv->load();
 
-    $router = new League\Route\Router;
+        $request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
+            $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
+        );
 
-    $router->map('GET', '/', [ Mike4ip\Cloud\Controller\Home::class, 'index' ]);
-    $router->map('GET', '/login', [ Mike4ip\Cloud\Controller\Home::class, 'login' ]);
-    $router->map('GET', '/register', [ Mike4ip\Cloud\Controller\Home::class, 'register' ]);
-    $router->map('POST', '/login', [ Mike4ip\Cloud\Controller\Home::class, 'login_do' ]);
-    $router->map('POST', '/register', [ Mike4ip\Cloud\Controller\Home::class, 'register_do' ]);
+        $router = new League\Route\Router;
 
-    $response = $router->dispatch($request);
-    (new Zend\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+        $router->map('GET', '/', [Mike4ip\Cloud\Controller\Home::class, 'index']);
+        $router->map('GET', '/login', [Mike4ip\Cloud\Controller\Home::class, 'login']);
+        $router->map('GET', '/logout', [Mike4ip\Cloud\Controller\Home::class, 'logout']);
+        $router->map('GET', '/register', [Mike4ip\Cloud\Controller\Home::class, 'register']);
+        $router->map('POST', '/login', [Mike4ip\Cloud\Controller\Home::class, 'login_do']);
+        $router->map('POST', '/register', [Mike4ip\Cloud\Controller\Home::class, 'register_do']);
+
+        $router->map('POST', '/upload', [Mike4ip\Cloud\Controller\File::class, 'upload']);
+
+        $response = $router->dispatch($request);
+        (new Zend\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+    } catch (Exception $e) {
+        print(
+            Mike4ip\Cloud\Core\Templater::i()->load('error.html')->render()
+        );
+    }

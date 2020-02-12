@@ -19,6 +19,9 @@
         .icon-file {
             font-size: 5rem;
         }
+        .user-info {
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -40,10 +43,10 @@
                     <a class="nav-link" href="/logout">Выйти</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Поиск" aria-label="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
-            </form>
+            <div class="my-2 my-lg-0 user-info">
+                <i class="fa fa-user"></i>
+                {{ user.username }}
+            </div>
         </div>
     </nav>
 
