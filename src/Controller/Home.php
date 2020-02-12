@@ -32,8 +32,12 @@ class Home
 
         $user = new User();
         $user_info = $user->getInfo($uid);
+        $files = new \Mike4ip\Cloud\Entity\File();
+        $files_list = $files->getFiles($uid);
+
         $template = Templater::i()->load('main.html')->render([
-            'user' => $user_info
+            'user' => $user_info,
+            'files' => $files_list
         ]);
 
         $response = new Response;
